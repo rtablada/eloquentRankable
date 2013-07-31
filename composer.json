@@ -1,6 +1,13 @@
 {
     "name": "rtablada/eloqent-rankable",
-    "description": "",
+    "description": "A Rankable Eloquent Model Package",
+    "keywords": [
+        "laravel",
+        "lpm",
+        "eloquent",
+        "orm",
+        "rankable"
+    ],
     "authors": [
         {
             "name": "Ryan Tablada",
