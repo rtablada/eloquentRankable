@@ -7,9 +7,18 @@ abstract class RankableModel extends Eloquent
 	/**
 	 * Metrics array used to store values to be modified
 	 * using the touch magic methods
+	 *
 	 * @var array
 	 */
 	protected $metricWeights = array();
+
+	/**
+	 * Determines if a ranking sort will end after one check of
+	 * rank order.
+	 *
+	 * @var boolean
+	 */
+	public $globalRank = false;
 
 	/**
 	 * Create a new Rankable Eloquent Collection instance.
@@ -40,6 +49,21 @@ abstract class RankableModel extends Eloquent
 		}
 	}
 
+	public function rankBefore(RankableModel $model)
+	{
+		$lowerRank = $model->rank;
+		$this->attributes['rank'] = $lowerRank + 1;
+		$this->save();
+	}
+
+	public function rankBetween(RankableModel $high, RankableModel $low)
+	{
+		$lowerRank = $low->rank;
+		$highererRank = $higher->rank;
+		$this->attributes['rank'] = ($highererRank + $lowerRank) / 2;
+		$this->save();
+	}
+
 	/**
 	 * Checks to see if method call began with updateMetric
 	 * Checks to see if metric key exists in metrics property
@@ -62,7 +86,8 @@ abstract class RankableModel extends Eloquent
 	}
 
 	/**
-	 * Updates the rank attribute against the metric weight
+	 * Updates the rank attribute against the metric weight.
+	 *
 	 * @param  string  $metric
 	 * @param  integer $value
 	 * @return null
