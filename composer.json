@@ -1,5 +1,5 @@
 {
-    "name": "rtablada/eloqent-rankable",
+    "name": "rtablada/eloquent-rankable",
     "description": "A Rankable Eloquent Model Package",
     "keywords": [
         "laravel",
@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Rtablada\\EloqentRankable": "src/"
+            "Rtablada\\EloquentRankable": "src/"
         }
     },
     "minimum-stability": "dev",
