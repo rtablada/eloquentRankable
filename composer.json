@@ -1,0 +1,20 @@
+{
+    "name": "rtablada/eloqent-rankable",
+    "description": "",
+    "authors": [
+        {
+            "name": "Ryan Tablada",
+            "email": "ryan.tablada@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Rtablada\\EloqentRankable": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
