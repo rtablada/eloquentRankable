@@ -9,12 +9,14 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.0.x"
+        "illuminate/support": "4.0.x",
+        "illuminate/database": "4.0.x"
     },
     "autoload": {
         "psr-0": {
             "Rtablada\\EloqentRankable": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "license": "MIT"
 }
