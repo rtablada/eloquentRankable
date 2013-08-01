@@ -49,6 +49,13 @@ abstract class RankableModel extends Eloquent
 		$this->save();
 	}
 
+	public function rankAfter(RankableModel $model)
+	{
+		$lowerRank = $model->rank;
+		$this->attributes['rank'] = $lowerRank - 1;
+		$this->save();
+	}
+
 	public function rankBetween(RankableModel $high, RankableModel $low)
 	{
 		$lowerRank = $low->rank;
