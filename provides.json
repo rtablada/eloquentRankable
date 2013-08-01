@@ -1,0 +1,10 @@
+{
+	"providers": [
+	],
+	"aliases": [
+		{
+			"alias": "Rankable",
+			"facade": "Rtablada\EloquentRankable"
+		}
+	]
+}
