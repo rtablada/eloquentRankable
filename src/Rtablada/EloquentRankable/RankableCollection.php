@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Collection;
 
-abstract class RankableCollection extends Collection
+class RankableCollection extends Collection
 {
 	/**
 	 * Checks order of collection and updates rank to new order
@@ -12,29 +12,36 @@ abstract class RankableCollection extends Collection
 	 */
 	public function updateRanksByIds(array $idResults)
 	{
-		foreach ($this->items as $key => $item) {
-			if ($item->id !== $idResults[$key]) {
-				if ($key === 0) {
-					$resultItem = $items->find($idResults[$key]);
-					$resultItem->rankBefore($item);
-				} else {
-					$resultItem->rankBetween($items[$key - 1], $item);
-				}
+		$this->sortByRank();
 
-				if (! $item->globalRank) {
-					return $this->sortByRank();
+		$i = 0;
+		$length = count($this->items) - 1;
+		$last = null;
+
+		foreach ($this->items as $item) {
+			if ($item->id != $idResults[$i]) {
+				$result = $this->find($idResults[$i]);
+				if ($i === 0) {
+					$result->rankBefore($item);
 				} else {
-					return $this->updateRanksByIds($idResults);
+					$result->rankBetween($item, $last);
 				}
+				return $this->updateRanksByIds($idResults);
 			}
+			$i ++;
+			$last = $item;
 		}
+
+		return $this->sortByRank();
 	}
 
 	public function sortByRank()
 	{
-		return $this->sortBy(function($model)
+		$collection = $this->sortBy(function($model)
 		{
-			return $model->rank;
+			return - $model->rank;
 		});
+
+		return $collection;
 	}
 }
