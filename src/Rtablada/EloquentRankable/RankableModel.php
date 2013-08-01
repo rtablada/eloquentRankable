@@ -37,7 +37,17 @@ abstract class RankableModel extends Eloquent
 		if ($metric = $this->findMetric($method)) {
 			$parameters[0] = empty($parameters) ? 1 : $parameters[0];
 			return $this->updateMetric($metric, $parameters[0]);
-		} else {
+		} else if (preg_match('/ranked(.*)/', $method, $matches)) {
+			$instance = $this->orderBy('rank', 'DESC');
+
+			if ($matches[1] == 'All') {
+				return call_user_func_array(array($instance, 'get'), $parameters);
+			} else {
+				return call_user_func_array(array($instance, $matches[1]), $parameters);
+			}
+
+		}
+		else {
 			return parent::__call($method, $parameters);
 		}
 	}
