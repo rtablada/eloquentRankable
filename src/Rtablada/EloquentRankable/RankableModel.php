@@ -1,6 +1,7 @@
 <?php namespace Rtablada\EloquentRankable;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\Str;
 
 abstract class RankableModel extends Eloquent
 {
@@ -45,7 +46,7 @@ abstract class RankableModel extends Eloquent
 			$parameters[0] = empty($parameters) ? 1 : $parameters[0];
 			return $this->updateMetric($metric, $parameters[0]);
 		} else {
-			parent::__call($method, $parameters);
+			return parent::__call($method, $parameters);
 		}
 	}
 
@@ -59,9 +60,15 @@ abstract class RankableModel extends Eloquent
 	public function rankBetween(RankableModel $high, RankableModel $low)
 	{
 		$lowerRank = $low->rank;
-		$highererRank = $higher->rank;
-		$this->attributes['rank'] = ($highererRank + $lowerRank) / 2;
+		$higherRank = $high->rank;
+		$this->attributes['rank'] = ($higherRank + $lowerRank) / 2;
 		$this->save();
+	}
+
+	public static function rankOrderSet(array $order)
+	{
+		$collection = static::all();
+		return $collection->updateRanksByIds($order);
 	}
 
 	/**
@@ -76,7 +83,7 @@ abstract class RankableModel extends Eloquent
 	{
 		$matches = array();
 		if (preg_match('/updateMetric(.*)/', $method, $matches)) {
-			$metric = $matches[1];
+			$metric = Str::snake($matches[1]);
 			if (array_key_exists($metric, $this->metricWeights)) {
 				return $metric;
 			}
@@ -95,5 +102,34 @@ abstract class RankableModel extends Eloquent
 	protected function updateMetric($metric, $value = 1)
 	{
 		$this->attributes['rank'] += $value * $this->metricWeights[$metric];
+		$this->save();
+	}
+
+	/**
+	 * Handle dynamic static method calls into the method.
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return mixed
+	 */
+	public static function __callStatic($method, $parameters)
+	{
+
+		$instance = new static;
+		$matches = array();
+
+		if (preg_match('/ranked(.*)/', $method, $matches)) {
+
+			$instance = $instance->orderBy('rank', 'DESC');
+
+			if ($matches[1] == 'All') {
+				return call_user_func_array(array($instance, 'get'), $parameters);
+			} else {
+				return call_user_func_array(array($instance, $matches[1]), $parameters);
+			}
+
+		}
+
+		return call_user_func_array(array($instance, $method), $parameters);
 	}
 }
