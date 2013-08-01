@@ -14,14 +14,6 @@ abstract class RankableModel extends Eloquent
 	protected $metricWeights = array();
 
 	/**
-	 * Determines if a ranking sort will end after one check of
-	 * rank order.
-	 *
-	 * @var boolean
-	 */
-	public $globalRank = false;
-
-	/**
 	 * Create a new Rankable Eloquent Collection instance.
 	 *
 	 * @param  array  $models
