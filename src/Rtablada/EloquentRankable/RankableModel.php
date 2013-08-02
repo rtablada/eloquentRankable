@@ -6,6 +6,28 @@ use Illuminate\Support\Str;
 abstract class RankableModel extends Eloquent
 {
 	/**
+	 * Create a new Eloquent model instance.
+	 *
+	 * @param  array  $attributes
+	 * @return void
+	 */
+	public function __construct(array $attributes = array())
+	{
+		if ( ! isset(static::$booted[get_class($this)]))
+		{
+			static::boot();
+
+			static::$booted[get_class($this)] = true;
+		}
+
+		if ( ! isset($attributes['rank']) ) {
+			$this->attributes['rank'] = 0;
+		}
+
+		$this->fill($attributes);
+	}
+
+	/**
 	 * Metrics array used to store values to be modified
 	 * using the touch magic methods
 	 *
