@@ -21,7 +21,7 @@ abstract class RankableModel extends Eloquent
 		}
 
 		if ( ! isset($attributes['rank']) ) {
-			$this->attributes['rank'] = 0;
+			$this->setAttribute('rank', 0);
 		}
 
 		$this->fill($attributes);
